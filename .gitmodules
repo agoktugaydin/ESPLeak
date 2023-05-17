@@ -1,0 +1,6 @@
+[submodule "leak-detector-master"]
+	path = leak-detector-master
+	url = https://github.com/agoktugaydin/leak-detector-master
+[submodule "leak-detector-slave"]
+	path = leak-detector-slave
+	url = https://github.com/agoktugaydin/leak-detector-slave
