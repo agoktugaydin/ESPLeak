@@ -3,10 +3,8 @@
 #include <ArduinoJson.h>
 #include <config.h>
 
-
-// IP address and port number of the WebSocket server
-IPAddress webSocketServer(WS_SERVER);
-int webSocketPort = WS_PORT;
+IPAddress webSocketServer(WEBSOCKET_SERVER_IP1, WEBSOCKET_SERVER_IP2, WEBSOCKET_SERVER_IP3, WEBSOCKET_SERVER_IP4);
+int webSocketPort = WEBSOCKET_SERVER_PORT;
 const char* ssid = WIFI_SSID;
 const char* password = WIFI_PASSWORD;
 
@@ -51,18 +49,23 @@ void generateFakeData() {
 
 
 void sendData() {
-  // Generate fake data
-  generateFakeData();
+// Create a new JSON document for the provided data
+StaticJsonDocument<200> jsonData;
 
-  // Serialize the JSON data
-  String jsonData;
-  serializeJson(jsonDoc, jsonData);
+// Set values for the provided data
+jsonData["deviceId"] = "3bf76280-6ca9-4d83-9ffb-db112de00c24";
+jsonData["gasIntensity"] = 7;
+jsonData["zone"] = "43C72";
 
-  // Send the JSON data over WebSocket
-  wsClient.sendTXT(jsonData);
-  Serial.println(jsonData);
+// Serialize the JSON data
+String serializedData;
+serializeJson(jsonData, serializedData);
+
+// Send the JSON data over WebSocket
+wsClient.sendTXT(serializedData);
+Serial.println(serializedData);
+
 }
-
 
 void wsEvent(WStype_t type, uint8_t* payload, size_t length) {
   if (type == WStype_DISCONNECTED) {
@@ -84,6 +87,7 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi...");
+
   }
 
   // Clear the JSON document
@@ -127,3 +131,4 @@ void loop() {
     lastSent = now;
   }
 }
+
