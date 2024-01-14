@@ -27,8 +27,10 @@ Adafruit_SSD1306 display(OLED_RESET);
 
 typedef struct struct_message {
   int id;
-  int x;
-  int y;
+  // String uuid;
+  int gasIntensity;
+  // String zone;
+  int zone;
 }
 struct_message;
 
@@ -47,10 +49,12 @@ void OnDataRecv(const uint8_t * mac_addr,
   Serial.println(macStr);
   memcpy( & myData, incomingData, sizeof(myData));
   Serial.printf("Board ID %u: %u bytes\n", myData.id, len);
-  boardsStruct[myData.id - 1].x = myData.x;
-  boardsStruct[myData.id - 1].y = myData.y;
-  Serial.printf("x value: %d \n", boardsStruct[myData.id - 1].x);
-  Serial.printf("y value: %d \n", boardsStruct[myData.id - 1].y);
+  // boardsStruct[myData.id - 1].uuid = myData.uuid;
+  boardsStruct[myData.id - 1].gasIntensity = myData.gasIntensity;
+  boardsStruct[myData.id - 1].zone = myData.zone;
+  // Serial.printf("x value: %d \n", boardsStruct[myData.id - 1].uuid);
+  Serial.printf("y value: %d \n", boardsStruct[myData.id - 1].gasIntensity);
+  Serial.printf("z value: %d \n", boardsStruct[myData.id - 1].zone);
   Serial.println("Data received from ESP-NOW");
 
 }
@@ -64,7 +68,7 @@ void displayValues() {
 
   rawValue = rawSum / 500;
   voltage = (rawValue / 4096.0) * 3300;
-  percentage = map(rawValue, 1400, 4096, 0, 100);
+  percentage = map(rawValue, 1000, 4096, 0, 100);
 
   display.setTextColor(WHITE);
   display.setTextSize(1);
@@ -73,32 +77,38 @@ void displayValues() {
   if (rawValue < limit) {
     digitalWrite(LED_BUILTIN, LOW);
     digitalWrite(18, LOW);
-    display.print("NORMAL");
-    display.setCursor(0, 10);
-    display.print("raw value:");
-    display.print(rawValue);
+    // display.setCursor(0, 10);
+    display.print("STATUS:   ");
+    display.print("NO LEAK");
+    // display.print("raw value:");
+    // display.print(rawValue);
     display.print("\n");
-    display.print("received value:");
-    display.print(boardsStruct[0].x);
-    display.print("\n");
-    display.print("Percentage: ");
+    display.print("Gas Intensity: ");
     display.print(percentage);
     display.print("%");
+    display.print("\n");
+    display.print("SLAVE 1:  ");
+    display.print(boardsStruct[0].gasIntensity);
+    display.print("%");
+    display.print("\n");
+
   } else {
     digitalWrite(LED_BUILTIN, HIGH);
     digitalWrite(18, HIGH);
+    // display.setCursor(0, 10);
+    display.print("STATUS:   ");
     display.print("LEAK");
-    display.setCursor(0, 10);
-    display.print("raw value:");
-    display.print(rawValue);
+    // display.print("raw value:");
+    // display.print(rawValue);
     display.print("\n");
-    display.print("received value:");
-    display.print(boardsStruct[0].x);
-    display.print("\n");
-    display.print("Percentage: ");
+    display.print("Gas Intensity: ");
     display.print(percentage);
     display.print("%");
-
+    display.print("\n");
+    display.print("SLAVE 1:  ");
+    display.print(boardsStruct[0].gasIntensity);
+    display.print("%");
+    display.print("\n");
   }
 
   display.display();
@@ -112,7 +122,11 @@ void sendData() {
 
   jsonData["deviceId"] = "3bf76280-6ca9-4d83-9ffb-db112de00c24";
   jsonData["gasIntensity"] = percentage;
-  jsonData["zone"] = "43C72";
+  jsonData["zone"] = "35A41";
+
+  jsonData["deviceId2"] = "51b8b9eb-6dae-4f75-99f0-84740a2fe42a";
+  jsonData["gasIntensity2"] = boardsStruct[0].gasIntensity;
+  jsonData["zone2"] = "41A35";
 
   String serializedData;
   serializeJson(jsonData, serializedData);
