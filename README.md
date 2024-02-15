@@ -5,6 +5,23 @@
 
 The master device in this project was developed to transmit the flammable gas density data, which it receives from the slave devices via the ESP-NOW protocol and measures with the sensor on itself, to the server via websocket.
 
+![Structure Diagram](/images/diagram.png)
+
+## Hardware
+
+- ESP32 Development Module
+- MQ-9 Gas Sensor
+- 64x128 OLED Display
+- Buzzer
+- 3.7V 18650 Li-ion Battery
+
+<p float="left">
+  <img src="./images/pcb.jpg" width="250" /> 
+  <img src="./images/master.jpg" width="250" />
+</p>
+
+
+
 ## Dependencies
 
 - Arduino.h
