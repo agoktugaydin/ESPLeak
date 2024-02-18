@@ -16,8 +16,9 @@ The master device in this project was developed to transmit the flammable gas de
 - 3.7V 18650 Li-ion Battery
 
 <p float="left">
-  <img src="./images/pcb.jpg" width="250" /> 
-  <img src="./images/master.jpg" width="250" />
+  <img src="./images/pcb.jpg" width="230" /> 
+  <img src="./images/device.jpeg" width="230" />
+  <img src="./images/device2.jpeg" width="230" />
 </p>
 
 
