@@ -8,8 +8,11 @@
 #include <Adafruit_SSD1306.h>
 #include <config.h>
 
-IPAddress webSocketServer(WEBSOCKET_SERVER_IP1, WEBSOCKET_SERVER_IP2, WEBSOCKET_SERVER_IP3, WEBSOCKET_SERVER_IP4);
-int webSocketPort = WEBSOCKET_SERVER_PORT;
+// IPAddress webSocketServer(WEBSOCKET_SERVER_IP1, WEBSOCKET_SERVER_IP2, WEBSOCKET_SERVER_IP3, WEBSOCKET_SERVER_IP4);
+String IPAddress = "192.168.0.86";
+uint16_t PORT = 5600; 
+
+// int webSocketPort = WEBSOCKET_SERVER_PORT;
 const char * ssid = WIFI_SSID;
 const char * password = WIFI_PASSWORD;
 
@@ -174,7 +177,7 @@ void setup() {
   delay(300);
   // WiFi.begin(ssid, password);
 
-  wsClient.begin(webSocketServer, webSocketPort);
+  wsClient.beginSSL(IPAddress,PORT);
   wsClient.onEvent(wsEvent);
   Serial.println("WebSocket client started...");
   
